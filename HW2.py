@@ -1,34 +1,17 @@
 import streamlit as st
-import pandas as pd
-import plotly.graph_objects as go
 import seaborn as sns
+import pandas as pd
+import plotly.express as px
+import plotly.figure_factory as ff
 
-df = sns.load_dataset("iris")
-
-#Can select the columns from the side bar 
-x_lbl = st.sidebar.selectbox('x axis: ', df.columns)
-y_lbl = st.sidebar.selectbox('y axis: ', df.drop(columns=[x_lbl]).columns)
-z_lbl = st.sidebar.selectbox('z axis: ', df.drop(columns=[x_lbl, y_lbl]).columns)
-
-# Create an object for 3d scatter
-Object3d = go.Scatter3d(
-    x = df[x_lbl], y = df[y_lbl], z = df[z_lbl],
-    mode = 'markers',
-    marker = dict(size=5, color='blue'),
-)
-
-# Create an object for graph layout
-fig = go.Figure(data=[Object3d])
-fig.update_layout(
-    scene = dict(
-    xaxis_title = x_lbl,
-    yaxis_title = y_lbl,
-    zaxis_title = z_lbl),
-    margin=dict(r=30, b=10, l=10, t=10),
-)
 st.write("""
-# Seaborn iris dataset
-3D scatter plot between the features for Iris flower  
+# Describing Iris Dataset
+Visualizing the relationship between Petal_length, Sepa_width and Sepal_length
 """)
-st.plotly_chart(fig, use_container_width=True)
 
+df_iris = sns.load_dataset("iris")
+
+fig = px.scatter_3d(df_iris, x='petal_length', y='sepal_width', z='petal_width',color='species', size = "sepal_length", opacity = 0.7, size_max = 14)
+fig = fig.update_layout(margin = dict(l=1, r=0, b=0,t=0))
+
+st.plotly_chart(fig, use_container_width=True)
